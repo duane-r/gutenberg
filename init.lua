@@ -1,10 +1,13 @@
--- List all of the texts stored in books/ here:
-local files = {
-	'princess_of_mars.txt',
-}
-
 gutenberg = {}
 gutenberg.path = minetest.get_modpath(minetest.get_current_modname())
+
+local files = {}
+for _, filename in pairs(minetest.get_dir_list(gutenberg.path.."/books/")) do
+	if filename:find('%.txt$') then
+		files[#files+1] = filename
+	end
+end
+
 local lpp = 18 -- Lines per book's page
 
 local function get_book_data(file)
