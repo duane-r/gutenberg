@@ -3,12 +3,12 @@ local files = {
 	'princess_of_mars.txt',
 }
 
-gutenburg = {}
-gutenburg.path = minetest.get_modpath(minetest.get_current_modname())
+gutenberg = {}
+gutenberg.path = minetest.get_modpath(minetest.get_current_modname())
 local lpp = 18 -- Lines per book's page
 
 local function get_book_data(file)
-	local f = gutenburg.book_files[file]
+	local f = gutenberg.book_files[file]
 	if not f then
 		return
 	end
@@ -40,7 +40,7 @@ local function book_on_use(itemstack, user)
 	local data = minetest.deserialize(itemstack:get_metadata())
 	local item_name = itemstack:get_name()
 
-	local file = item_name:gsub('gutenburg:book_', '')..'.txt'
+	local file = item_name:gsub('gutenberg:book_', '')..'.txt'
 	local book, text = get_book_data(file)
 	if not book then
 		return
@@ -75,11 +75,11 @@ local function book_on_use(itemstack, user)
 	"label[3.2,7.7;Page " .. page .. " of " .. book.page_max .. "]" ..
 	"button[4.9,7.6;0.8,0.8;book_next;>]"
 
-	minetest.show_formspec(player_name, "gutenburg:book_gutenburg", formspec)
+	minetest.show_formspec(player_name, "gutenberg:book_gutenberg", formspec)
 end
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
-	if formname ~= "gutenburg:book_gutenburg" then return end
+	if formname ~= "gutenberg:book_gutenberg" then return end
 	local stack = player:get_wielded_item()
 
 	if fields.book_next or fields.book_prev then
@@ -87,7 +87,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		local data = minetest.deserialize(stack:get_metadata())
 		if not data or not data.page then
 			local item_name = stack:get_name()
-			local file = item_name:gsub('gutenburg:book_', '')..'.txt'
+			local file = item_name:gsub('gutenberg:book_', '')..'.txt'
 			book = get_book_data(file)
 			if not book then
 				return
@@ -118,15 +118,15 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	player:set_wielded_item(stack)
 end)
 
-gutenburg.book_files = {}
+gutenberg.book_files = {}
 local titles = {}
 for _, file in pairs(files) do
-	local f = io.open(gutenburg.path..'/books/'..file, 'r')
+	local f = io.open(gutenberg.path..'/books/'..file, 'r')
 	if f then
-		gutenburg.book_files[file] = f
+		gutenberg.book_files[file] = f
 
 		local book = get_book_data(file)
-		local lower = 'gutenburg:book_'..file:gsub('%.txt', '')
+		local lower = 'gutenberg:book_'..file:gsub('%.txt', '')
 		titles[#titles+1] = lower
 
 		minetest.register_craftitem(lower, {
@@ -139,15 +139,15 @@ for _, file in pairs(files) do
 	end
 end
 
-minetest.register_craftitem('gutenburg:book_gutenburg', {
-	description = 'A Project Gutenburg book',
+minetest.register_craftitem('gutenberg:book_gutenberg', {
+	description = 'A Project Gutenberg book',
 	inventory_image = "default_book_written.png",
 	groups = {book = 1, not_in_creative_inventory = 1},
 	stack_max = 1,
 })
 
 minetest.register_craft({
-	output = 'gutenburg:book_gutenburg',
+	output = 'gutenberg:book_gutenberg',
 	recipe = {
 		{'default:paper', '', ''},
 		{'', 'default:paper', ''},
@@ -156,7 +156,7 @@ minetest.register_craft({
 })
 
 minetest.register_on_craft(function(itemstack, player, old_craft_grid, craft_inv)
-	if #titles < 1 or itemstack:get_name() ~= "gutenburg:book_gutenburg" then
+	if #titles < 1 or itemstack:get_name() ~= "gutenberg:book_gutenberg" then
 		return
 	end
 
