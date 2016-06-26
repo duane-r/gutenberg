@@ -103,7 +103,7 @@ end)
 gutenberg.books = {}
 local titles = {}
 for _, file in pairs(files) do
-	if file:find('^[a-zA-Z%._]+$') then
+	if file:find('^[a-zA-Z0-9%._]+$') then
 		local f = io.open(gutenberg.path..'/books/'..file, 'r')
 		if f then
 			for non = 1, 1 do
