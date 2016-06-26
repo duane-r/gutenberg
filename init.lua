@@ -122,7 +122,8 @@ for _, file in pairs(files) do
 				end
 
 				if not (book.title and book.author) then
-					break
+					book.title = file:gsub('%.txt$', '')
+					book.author = 'Unknown'
 				end
 
 				local page_max = 0
