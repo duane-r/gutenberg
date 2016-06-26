@@ -103,68 +103,70 @@ end)
 gutenberg.books = {}
 local titles = {}
 for _, file in pairs(files) do
-	local f = io.open(gutenberg.path..'/books/'..file, 'r')
-	if f then
-		for non = 1, 1 do
-			local book = {}
+	if file:find('^[a-zA-Z%._]+$') then
+		local f = io.open(gutenberg.path..'/books/'..file, 'r')
+		if f then
+			for non = 1, 1 do
+				local book = {}
 
-			local text = f:read('*a')
-			f:seek('set')
-			text = text:gsub('\r', '')
+				local text = f:read('*a')
+				f:seek('set')
+				text = text:gsub('\r', '')
 
-			for tit in text:gmatch('Title: ([^\n]+)') do
-				book.title = tit
-			end
-
-			for aut in text:gmatch('Author: ([^\n]+)') do
-				book.author = aut
-			end
-
-			if not (book.title and book.author) then
-				break
-			end
-
-			local page_max = 0
-			local line = 1
-			local page = 1
-			local page_text = {}
-			for str in (text .. "\n"):gmatch("([^\n]*)[\n]") do
-				if page > lpp then
-					line = 1
-					local cache_file = file:gsub('%.txt$', '') .. string.format('%04d', page_max) .. '.txt'
-					local full_cache_file = gutenberg.cache_path..'/'..cache_file
-					local fo = io.open(full_cache_file, 'w')
-					if not fo then
-						gutenberg.cache_path = world_path
-						full_cache_file = gutenberg.cache_path..'/'..cache_file
-						fo = io.open(full_cache_file, 'w')
-					end
-					if fo then
-						fo:write(table.concat(page_text, '\n'))
-					else
-						break
-					end
-					page_text = {}
-					page_max = page_max + 1
-					page = 1
+				for tit in text:gmatch('Title: ([^\n]+)') do
+					book.title = tit
 				end
-				page_text[#page_text+1] = str
-				page = page + 1
+
+				for aut in text:gmatch('Author: ([^\n]+)') do
+					book.author = aut
+				end
+
+				if not (book.title and book.author) then
+					break
+				end
+
+				local page_max = 0
+				local line = 1
+				local page = 1
+				local page_text = {}
+				for str in (text .. "\n"):gmatch("([^\n]*)[\n]") do
+					if page > lpp then
+						line = 1
+						local cache_file = file:gsub('%.txt$', '') .. string.format('%04d', page_max) .. '.txt'
+						local full_cache_file = gutenberg.cache_path..'/'..cache_file
+						local fo = io.open(full_cache_file, 'w')
+						if not fo then
+							gutenberg.cache_path = world_path
+							full_cache_file = gutenberg.cache_path..'/'..cache_file
+							fo = io.open(full_cache_file, 'w')
+						end
+						if fo then
+							fo:write(table.concat(page_text, '\n'))
+						else
+							break
+						end
+						page_text = {}
+						page_max = page_max + 1
+						page = 1
+					end
+					page_text[#page_text+1] = str
+					page = page + 1
+				end
+
+				book.page_max = page_max
+
+				local node = 'gutenberg:book_'..file:gsub('%.txt', '')
+				gutenberg.books[node] = book
+				titles[#titles+1] = node
+
+				minetest.register_craftitem(node, {
+					description = book.title..' by '..book.author,
+					inventory_image = "default_book_written.png",
+					groups = {book = 1, not_in_creative_inventory = 1},
+					stack_max = 1,
+					on_use = book_on_use,
+				})
 			end
-
-			book.page_max = page_max
-
-			local node = 'gutenberg:book_'..file:gsub('%.txt', '')
-			gutenberg.books[node] = book
-			titles[#titles+1] = node
-
-			minetest.register_craftitem(node, {
-				description = book.title..' by '..book.author,
-				inventory_image = "default_book_written.png",
-				groups = {book = 1, not_in_creative_inventory = 1},
-				stack_max = 1,
-				on_use = book_on_use,
-			})
 		end
 	end
 end
