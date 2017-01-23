@@ -1,3 +1,8 @@
+-- Gutenberg init.lua
+-- Copyright Duane Robertson (duane@duanerobertson.com), 2017
+-- Distributed under the LGPLv2.1 (https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html)
+
+
 gutenberg = {}
 gutenberg.path = minetest.get_modpath(minetest.get_current_modname())
 local world_path = minetest.get_worldpath()
