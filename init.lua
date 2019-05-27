@@ -43,27 +43,27 @@ local function book_on_use(itemstack, user)
 	end
 
 	local text = f:read('*a')
-	f.close()
+	f:close()
 	for str in (text .. "\n"):gmatch("([^\n]*)[\n]") do
 		lines[#lines+1] = str
 	end
 
-	--formspec = "size[11,10]" .. default.gui_bg ..
-	formspec = "size[9,8]" .. default.gui_bg ..
+	formspec = "size[11,10]" .. default.gui_bg ..
+	--formspec = "size[9,8]" .. default.gui_bg ..
 	default.gui_bg_img ..
 	"label[0.5,0.5;by " .. book.author .. "]" ..
 	"tablecolumns[color;text]" ..
 	"tableoptions[background=#00000000;highlight=#00000000;border=false]" ..
 	"table[0.4,0;7,0.5;title;#FFFF00," .. minetest.formspec_escape(book.title) .. "]" ..
-	--"textarea[0.5,1.5;10.5,9;;" ..
-	"textarea[0.5,1.5;8.5,7;;" ..
+	"textarea[0.5,1.5;10.5,9;;" ..
+	--"textarea[0.5,1.5;8.5,7;;" ..
 	minetest.formspec_escape(string ~= "" and string or text) .. ";]" ..
-	--"button[2.4,9.6;0.8,0.8;book_prev;<]" ..
-	--"label[3.2,9.7;Page " .. page .. " of " .. book.page_max .. "]" ..
-	--"button[5.9,9.6;0.8,0.8;book_next;>]"
-	"button[2.4,7.6;0.8,0.8;book_prev;<]" ..
-	"label[3.2,7.7;Page " .. page .. " of " .. book.page_max .. "]" ..
-	"button[4.9,7.6;0.8,0.8;book_next;>]"
+	"button[2.4,9.6;0.8,0.8;book_prev;<]" ..
+	"label[3.2,9.7;Page " .. page .. " of " .. book.page_max .. "]" ..
+	"button[5.9,9.6;0.8,0.8;book_next;>]"
+	--"button[2.4,7.6;0.8,0.8;book_prev;<]" ..
+	--"label[3.2,7.7;Page " .. page .. " of " .. book.page_max .. "]" ..
+	--"button[4.9,7.6;0.8,0.8;book_next;>]"
 
 	minetest.show_formspec(player_name, "gutenberg:book_gutenberg", formspec)
 end
