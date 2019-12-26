@@ -148,6 +148,7 @@ for _, file in pairs(files) do
 						end
 						if fo then
 							fo:write(table.concat(page_text, '\n'))
+							fo:close()
 						else
 							break
 						end
@@ -173,6 +174,8 @@ for _, file in pairs(files) do
 					on_use = book_on_use,
 				})
 			end
+
+			f:close()
 		end
 	end
 end
